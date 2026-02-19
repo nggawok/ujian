@@ -1,0 +1,91 @@
+
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ujian CBT – Beranda</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="header">
+        <div class="title">Ujian CBT – Beranda</div>
+        <span class="badge" id="examTitle">Memuat…</span>
+      </div>
+      <p>Silakan isi identitas peserta di bawah ini lalu klik <b>Mulai Ujian</b>. 
+      Ujian berjalan di perangkat Anda dan hasil akan disimpan di browser ini.</p>
+
+      <div class="grid two">
+        <div>
+          <label>Nama Peserta</label>
+          <input id="nama" class="input" placeholder="Nama lengkap" autocomplete="name">
+        </div>
+        <div>
+          <label>ID Peserta</label>
+          <input id="idpeserta" class="input" placeholder="NIS/NIM/NIP atau lainnya">
+        </div>
+      </div>
+      <hr>
+      <div class="grid two">
+        <div>
+          <div class="small">Durasi</div>
+          <div class="badge" id="durasi">-</div>
+        </div>
+        <div style="text-align:right">
+          <button class="btn" id="startBtn">Mulai Ujian →</button>
+        </div>
+      </div>
+      <hr>
+      <details>
+        <summary>Pengaturan (opsional)</summary>
+        <div class="small">Beberapa opsi dapat Anda ubah cepat.</div>
+        <div class="grid two" style="margin-top:8px">
+          <div>
+            <label>Jumlah soal (maks)</label>
+            <input id="maxQuestions" class="input" type="number" min="1" value="" />
+          </div>
+          <div>
+            <label>Acak Soal</label>
+            <select id="shuffleQuestions" class="input">
+              <option value="true">Ya</option>
+              <option value="false">Tidak</option>
+            </select>
+          </div>
+        </div>
+      </details>
+
+      <div class="footer">
+        Tips: Gunakan <span class="kbd">Alt</span> + <span class="kbd">→/←</span> untuk navigasi soal saat ujian.
+      </div>
+    </div>
+  </div>
+  <script src="assets/js/app.js"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', async () => {
+      const cfg = await window.CBT.loadConfig();
+      document.getElementById('examTitle').textContent = cfg.examTitle;
+      document.getElementById('durasi').textContent = cfg.durationMinutes + ' menit';
+      document.getElementById('maxQuestions').value = cfg.maxQuestions;
+      document.getElementById('shuffleQuestions').value = String(cfg.shuffleQuestions);
+
+      document.getElementById('startBtn').addEventListener('click', () => {
+        const nama = document.getElementById('nama').value.trim();
+        const idp = document.getElementById('idpeserta').value.trim();
+        if(!nama || !idp){
+          alert('Mohon isi Nama dan ID Peserta.');
+          return;
+        }
+        const overrides = {
+          maxQuestions: parseInt(document.getElementById('maxQuestions').value || cfg.maxQuestions, 10),
+          shuffleQuestions: document.getElementById('shuffleQuestions').value === 'true'
+        };
+        localStorage.setItem('cbt_identity', JSON.stringify({nama, idp}));
+        sessionStorage.setItem('cbt_overrides', JSON.stringify(overrides));
+        window.location.href = 'exam.html';
+      });
+    });
+  </script>
+</body>
+</html>

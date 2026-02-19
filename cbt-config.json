@@ -1,0 +1,8 @@
+{
+  "examTitle": "Ujian CBT Contoh",
+  "durationMinutes": 15,
+  "maxQuestions": 10,
+  "shuffleQuestions": true,
+  "shuffleOptions": true,
+  "showAnswerAfterSubmit": true
+}
